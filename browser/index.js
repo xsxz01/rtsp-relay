@@ -14,12 +14,49 @@
         return;
       }
 
-      const script = Object.assign(document.createElement('script'), {
-        src: 'https://cdn.jsdelivr.net/gh/phoboslab/jsmpeg@b5799bf/jsmpeg.min.js',
-        onload: resolve,
-        onerror: reject,
-      });
-      document.head.appendChild(script);
+      // 定义多个url，直到script加载成功
+
+      const urls = [
+        'https://cdn.jsdelivr.net/gh/phoboslab/jsmpeg@b5799bf/jsmpeg.min.js',
+        'https://cdn.staticfile.net/jsmpeg/0.2/jsmpg.min.js',
+        'https://cdn.bootcdn.net/ajax/libs/jsmpeg/0.2/jsmpg.min.js',
+        'https://cdnjs.cloudflare.com/ajax/libs/jsmpeg/0.2/jsmpg.min.js',
+        'https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/jsmpeg/0.2/jsmpg.min.js',
+        'https://illusion-tech-public.obs.cn-north-9.myhuaweicloud.com/cdn/jsmpg.min.js'
+      ];
+
+      let index = 0;
+      const loadNext = () => {
+        if (index >= urls.length) {
+          reject(new Error('Failed to load JSMpeg'));
+          return;
+        }
+        const url = urls[index];
+        index++;
+
+        const script = Object.assign(document.createElement('script'), {
+          src: url,
+          onload: resolve,
+          onerror: () => {
+            script.remove(); // 移除失败的脚本标签
+            loadNext();
+          },
+        });
+
+        // 添加超时处理
+        const timeout = setTimeout(() => {
+          script.remove();
+          loadNext();
+        }, 5000); // 5秒超时
+
+        script.onload = () => {
+          clearTimeout(timeout);
+          resolve();
+        };
+
+        document.head.appendChild(script);
+      };
+      loadNext();
     });
 
   /**
