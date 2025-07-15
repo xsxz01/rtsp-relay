@@ -1,6 +1,6 @@
 {
-  "name": "rtsp-relay",
-  "version": "1.9.0",
+  "name": "rtsp-relay-xsxz01-fixed",
+  "version": "1.9.1",
   "author": "Kyle Hensel",
   "license": "MIT",
   "description": "📽 Relay an RTSP stream through an existing express.js server",
@@ -30,7 +30,7 @@
     "lint": "eslint --format pretty --ext .js,ts,.tsx --ignore-path .gitignore .",
     "test": "tsc && jest --runInBand",
     "build": "tsc index.js browser/index.js --declaration --allowJs --emitDeclarationOnly --resolveJsonModule --skipLibCheck",
-    "trypublish": "npm publish --provenance || true"
+    "trypublish": "npm publish"
   },
   "dependencies": {
     "express-ws": "^5.0.2",
